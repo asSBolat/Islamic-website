@@ -116,7 +116,7 @@ body {
 /* ========== КВАДРАТНОЕ СТЕКЛЯННОЕ ОКНО ========== */
 .glass-window {
     width: 100%;
-    aspect-ratio: 1;             /* ← КВАДРАТ! Высота = Ширина */
+    min-height: 500px;  /* ← КВАДРАТ! Высота = Ширина */
     flex-shrink: 0;              /* не сжимается */
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -145,6 +145,7 @@ body {
     width: 100%;
     height: 100%;
     flex-direction: column;
+
 }
 
 /* Показываем только ту секцию, у которой есть класс active */
@@ -189,8 +190,7 @@ body {
     display: flex;
     flex-direction: column;
     flex: 1;
-    justify-content: flex-start;  /* прижаты к верху */
-    gap: 8px;
+    gap: 18px;
     min-height: 0;
     padding-top: 5px;
 }
@@ -199,7 +199,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 20px;
+    padding: 16px 20px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 14px;
     font-size: 17px;
@@ -394,4 +394,222 @@ body {
 .scrollable-list::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
+}
+/* Главный экран загрузки на весь экран телефона */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121212; /* Темный фон, под стиль приложения */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Чтобы он точно перекрыл все остальные кнопки и окна */
+    transition: opacity 0.5s ease; /* Для плавного исчезновения потом */
+}
+
+/* Контейнер, чтобы луна была ровно над точками */
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Расстояние между луной и точками */
+}
+
+/* Настройки луны */
+.moon {
+    font-size: 28px;
+    animation: bounce 1.2s infinite ease-in-out;
+    animation-delay: 0.2s; /* ВАЖНО: Задержка точно такая же, как у второй точки! */
+}
+
+/* Контейнер для трех точек (чтобы стояли в ряд) */
+.dots-container {
+    display: flex;
+    gap: 10px; /* Расстояние между точками */
+}
+
+/* Настройка самих точек */
+.dot {
+    width: 14px;
+    height: 14px;
+    background-color: #2E8B57; /* Красивый исламский зеленый цвет */
+    border-radius: 50%; /* Делает их круглыми */
+    animation: bounce 1.2s infinite ease-in-out;
+}
+
+/* Настраиваем очередь прыжков для точек */
+.dot:nth-child(1) {
+    animation-delay: 0s;   /* Первая прыгает сразу */
+}
+.dot:nth-child(2) {
+    animation-delay: 0.2s; /* Вторая ждет 0.2 сек (Синхронно с луной!) */
+}
+.dot:nth-child(3) {
+    animation-delay: 0.4s; /* Третья ждет 0.4 сек */
+}
+
+/* Сама анимация (сценарий прыжка) */
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: translateY(0); /* Стоят на земле */
+    }
+    40% {
+        transform: translateY(-20px); /* Подлетают вверх на 20 пикселей */
+    }
+}
+/* Выравниваем название и описание друг под другом */
+.dhikr-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0; /* КРИТИЧЕСКИ ВАЖНО, чтобы текст не распирал плашку и создавал три точки */
+    text-align: left;
+}
+
+/* Настраиваем серый текст описания с тремя точками */
+.dhikr-descr {
+    font-size: 13px;
+    color: #777777;          /* Красивый серо-черный цвет, как ты просил */
+    margin-top: 2px;
+    white-space: nowrap;     /* Запрещаем тексту переноситься на вторую строку */
+    overflow: hidden;        /* Прячем всё, что выходит за рамки */
+    text-overflow: ellipsis; /* Заменяет скрытый хвост текста на три точки (...) */
+}
+/* Красивый стиль для полного текста Салавата на экране счетчика */
+#active-dhikr-full-text {
+    font-size: 16px;         /* Достаточно крупный шрифт, чтобы легко читать */
+    color: #aaaaaa;          /* Мягкий серый цвет, приятный для глаз */
+    text-align: center;      /* Выравниваем молитву строго по центру */
+    margin: 15px 10px;       /* Делаем аккуратные отступы сверху и снизу */
+    line-height: 1.5;        /* Увеличиваем расстояние между строками, чтобы текст не слипался */
+    font-style: italic;      /* Делаем текст курсивным, чтобы выделить, что это дуа */
+}
+/* Шапка экрана: раздвигает стрелку влево, а кнопку сброса вправо */
+.counter-header {
+    display: flex;
+    justify-content: space-between; /* Расталкивает кнопки по краям */
+    width: 100%;
+    margin-bottom: 20px;
+}
+/* Контейнер экрана счетчика */
+#dhikr-counter-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Верхние кнопки — строго по углам */
+.counter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.icon-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.icon-btn:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Центральная зона с текстами */
+.counter-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+}
+
+#active-dhikr-name {
+    font-size: 24px;
+    color: #fff;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+/* Оформление самого текста Салавата на мой вкус */
+#active-dhikr-full-text {
+    font-size: 14px;
+    color: #a1b5a7; /* Твой фирменный мягкий серо-зеленый цвет из расписания */
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 90%;
+    margin: 0 0 15px 0;
+    font-weight: 400;
+    opacity: 0.85;
+}
+
+.counter-number {
+    font-size: 72px;
+    font-weight: 700;
+    color: #fff;
+    margin: 5px 0;
+}
+
+/* Большая кнопка кликера во всю ширину экрана */
+.main-click-button {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 70px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    margin-bottom: 20px;
+}
+.main-click-button:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(0.98); /* Эффект нажатия упругой кнопки */
+}
+
+.dhikr-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+    padding: 0 5px;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: #a1b5a7;
+    padding: 8px 18px; /* Компактные отступы, кнопки стали аккуратными ушками */
+    border-radius: 20px; /* Круглые края */
+    font-size: 13px;
+    cursor: pointer;
+    width: auto; /* Теперь они не растягиваются на пол-экрана */
+    transition: all 0.2s;
+}
+
+.nav-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
 }

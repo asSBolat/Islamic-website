@@ -10,7 +10,16 @@
     <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-
+<div id="preloader">
+    <div class="loader-content">
+        <div class="moon">🌙</div>
+        <div class="dots-container">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        </div>
+    </div>
+</div>
     <div class="background-overlay"></div>
 
     <div class="app-container">
@@ -74,27 +83,41 @@
       <span class="dhikr-name">Астагфируллах</span>
        <span class="dhikr-badge" id="badge-astaghfirullah">0</span>
          </div>
-        <div class="dhikr-item" data-id="salavar">
-      <span class="dhikr-name">Аллаһуммә солли ‘аләә Мухаммадин уә ‘алә әәли Мухаммад </span>
-        <span class="dhikr-badge"id=badge-salavat>0</span>
-                        </div>
+  <div class="dhikr-item" data-id="salawat">
+    <div class="dhikr-info">
+        <span class="dhikr-name">Салават</span>
+        <span class="dhikr-descr">Аллаһуммә солли ‘аләә Мухаммадин уә ‘аләә әәли Мухаммад</span>
+    </div>
+    <span class="dhikr-badge" id="badge-salawat">0</span>
+</div>
+
         <div class="dhikr-item" data-id="lailahailalah">
     <span class="dhikr-name">Ләә иләәһә иллалааһ</span>
     <span class="dhikr-badge"id=badge-lailahailakalah>0</span>
 </div>
                         </div>
                 </div>
+        <div id="dhikr-counter-screen"      class="hidden">
+    
+    <div class="counter-header">
+        <button id="back-to-list" class="icon-btn">←</button>
+        <button id="reset-btn" class="icon-btn">↻</button>
+    </div>
 
-                <div id="dhikr-counter-screen" class="hidden">
-                    <button class="back-button" id="back-to-list">← Назад к списку</button>
-                    <h2 id="active-dhikr-name">Зикр</h2>
-                    <div class="counter" id="counter-view">0</div>
-                    <button class="click-area" id="click-button">Нажмите, чтобы считать</button>
-                    <button class="reset-button" id="reset-button">Сбросить этот счетчик</button>
-                    
-                </div>
-              </section>
-              
+    <div class="counter-body">
+        <h2 id="active-dhikr-name">Салават</h2>
+        <p id="active-dhikr-full-text">Аллаһуммә солли ‘аләә Мухаммәдин уә ‘аләә әәли Мухаммәд</p>
+        <div class="counter-number" id="counter-view">0</div>
+    </div>
+
+    <button id="click-area-btn" class="main-click-button">Нажмите, чтобы считать</button>
+
+    <div class="dhikr-navigation">
+        <button id="prev-dhikr" class="nav-btn">← Назад</button>
+        <button id="next-dhikr" class="nav-btn">Вперед →</button>
+    </div>
+</div>
+       </section>
             <section id="sec-quran" class="content-section">
                 <div class="card-placeholder">
                     <h2>Священный Коран</h2>
@@ -111,7 +134,6 @@
                     </div>
                 </div>
             </section>
-
             <section id="sec-ai" class="content-section">
                 <div class="card-placeholder">
                     <h2>ИИ Помощник</h2>

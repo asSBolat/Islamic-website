@@ -1,3 +1,18 @@
+// Ждем, пока загрузятся все стили и элементы на странице
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    
+    // Делаем небольшую задержку (например, 1 секунду) просто для красоты, 
+    // чтобы пользователь точно успел увидеть красивую анимацию луны
+    setTimeout(() => {
+        preloader.style.opacity = '0'; // Плавно делаем прозрачным
+        
+        // Когда он станет прозрачным, полностью удаляем его, чтобы можно было кликать по кнопкам
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500); 
+    }, 1000); 
+});
 // Переменная для хранения таймера обратного отсчета
 let countdownInterval = null;
 
@@ -51,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Открытие экрана счетчика конкретного зикра
     dhikrItems.forEach(item => {
         item.addEventListener('click', () => {
+            currentDhikrIndex = allDhikrItems.indexOf(item); 
             currentDhikrId = item.getAttribute('data-id');
             const name = item.querySelector('.dhikr-name').innerText;
             
@@ -259,3 +275,71 @@ function startCountdown(todayPrayers) {
     updateTimer();
     countdownInterval = setInterval(updateTimer, 1000);
 }
+
+// Переменные для хранения текущего зикра и его счета
+let currentDhikrIndex = 0;
+const allDhikrItems = Array.from(document.querySelectorAll('.dhikr-item'));
+        function loadDhikrData(index) {
+    const item = allDhikrItems[index];
+    if (!item) return;
+
+    // Вытаскиваем имя из класса .dhikr-name
+    const name = item.querySelector('.dhikr-name').innerText;
+    // Вытаскиваем описание из нового класса .dhikr-descr
+    const descrElement = item.querySelector('.dhikr-descr'); 
+    
+    document.getElementById('active-dhikr-name').innerText = name;
+    
+    const fullTextCounter = document.getElementById('active-dhikr-full-text');
+    if (descrElement) {
+        fullTextCounter.innerText = descrElement.innerText;
+        fullTextCounter.style.display = 'block';
+    } else {
+        fullTextCounter.style.display = 'none';
+    }
+
+    const currentCount = item.querySelector('.dhikr-badge').innerText;
+    document.getElementById('counter-view').innerText = currentCount;
+}
+
+
+// ОБРАБОТЧИК КЛИКА ПО БОЛЬШОЙ КНОПКЕ (КЛИКЕРУ)
+document.getElementById('click-area-btn').addEventListener('click', () => {
+    const counterView = document.getElementById('counter-view');
+    let count = parseInt(counterView.innerText) || 0;
+    count++;
+    counterView.innerText = count;
+
+    // Сразу обновляем цифру в главном списке и в соответствующем бейдже
+    const activeItem = allDhikrItems[currentDhikrIndex];
+    if (activeItem) {
+        activeItem.querySelector('.dhikr-badge').innerText = count;
+    }
+});
+
+// ОБРАБОТЧИК КНОПКИ СБРОСА (↻)
+document.getElementById('reset-btn').addEventListener('click', () => {
+    document.getElementById('counter-view').innerText = '0';
+    const activeItem = allDhikrItems[currentDhikrIndex];
+    if (activeItem) {
+        activeItem.querySelector('.dhikr-badge').innerText = '0';
+    }
+});
+
+// Кнопка "Вперед"
+document.getElementById('next-dhikr').addEventListener('click', () => {
+    currentDhikrIndex = (currentDhikrIndex + 1) % allDhikrItems.length;
+    loadDhikrData(currentDhikrIndex);
+});
+
+// Кнопка "Назад"
+document.getElementById('prev-dhikr').addEventListener('click', () => {
+    currentDhikrIndex = (currentDhikrIndex - 1 + allDhikrItems.length) % allDhikrItems.length;
+    loadDhikrData(currentDhikrIndex);
+});
+
+// Возврат к списку
+document.getElementById('back-to-list').addEventListener('click', () => {
+    document.getElementById('dhikr-counter-screen').classList.add('hidden');
+    document.getElementById('dhikr-list-screen').classList.remove('hidden');
+});
